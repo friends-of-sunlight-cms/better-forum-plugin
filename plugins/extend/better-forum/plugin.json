@@ -1,0 +1,15 @@
+{
+    "$schema": "../../../system/schema/extend.json",
+    "name": "Better Forum",
+    "description": "New page types for forums",
+    "version": "1.0.0",
+    "api": "^8.0",
+    "url": "https://jdanek.eu",
+    "class": "BetterForumPlugin",
+    "langs": {
+        "betterforum": "Resources/languages/"
+    },
+    "events": [],
+    "events.web": [],
+    "events.admin": []
+}
