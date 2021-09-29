@@ -32,7 +32,7 @@ class BetterForumPlugin extends ExtendPlugin
         $args['script'] = __DIR__ . '/Resources/script/page-forum-group.php';
     }
 
-    public function onPageDelete(strany $args): void
+    public function onPageDelete(array $args): void
     {
         $args['handled'] = true;
     }
