@@ -169,14 +169,14 @@ class GroupGenerator
             'count_answers' => $countAnswers,
         ]);
 
-        return " <tr class='topic-" . _e($icon->name) . ($this->hl ? ' topic - hl' : '') . "'>
+        return " <tr class='topic-" . _e($icon->name) . ($this->hl ? ' topic-hl' : '') . "'>
             <td class='topic-icon-cell'>
-                <a href = '" . Router::page($rowData['id'], $rowData['slug']) . "'>
-                    <img src = '" . _e($icon->path) . "' alt = '" . _e($icon->alt) . "'>
+                <a href='" . Router::page($rowData['id'], $rowData['slug']) . "'>
+                    <img src='" . _e($icon->path) . "' alt='" . _e($icon->alt) . "'>
                 </a>
             </td>
             <td class='topic-main-cell'>
-                <a href = '" . Router::page($rowData['id'], $rowData['slug']) . "'> " . $rowData['title'] . "</a><br>
+                <a href='" . Router::page($rowData['id'], $rowData['slug']) . "'> " . $rowData['title'] . "</a><br>
                 <small> "
             . ($rowData['perex'] !== '' ? StringManipulator::ellipsis($rowData['perex'], 64) : '') .
             "</small>
@@ -198,9 +198,9 @@ class GroupGenerator
 
         $topicTitle = $data['topic_title'] ?? $data['subject'];
         $topicId = ($data['xhome'] != -1 ? $data['xhome'] : $data['id']);
-        return '<span class="answer - latest">
+        return '<span class="answer-latest">
                 <a href="' . Router::topic($topicId, $data['topic_slug']) . '" title="' . $topicTitle . '">' . StringManipulator::ellipsis($topicTitle, 24) . '</a><br>
-                <small class="post - info"><em>' . $lastAuthor . '</em> (' . GenericTemplates::renderTime($data['topic_bumptime'] ?? $data['time'], 'post') . ')</small>
+                <small class="post-info"><em>' . $lastAuthor . '</em> (' . GenericTemplates::renderTime($data['topic_bumptime'] ?? $data['time'], 'post') . ')</small>
                 </span>';
     }
 
