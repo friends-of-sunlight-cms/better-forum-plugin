@@ -59,13 +59,17 @@ class GroupGenerator
             'pages' => &$pages
         ]);
 
-        // forum group data
-        $pg = $this->preparePageGroups($pages);
-        $this->forumExtraData = $this->getExtraData($pg['ids']);
+        if (count($pages)>0) {
+            // forum group data
+            $pg = $this->preparePageGroups($pages);
+            $this->forumExtraData = $this->getExtraData($pg['ids']);
 
-        // render tables
-        foreach ($pg['groups'] as $group) {
-            $output .= $this->renderTable($group['rows'], $group['group_name']);
+            // render tables
+            foreach ($pg['groups'] as $group) {
+                $output .= $this->renderTable($group['rows'], $group['group_name']);
+            }
+        } else {
+            $output .= "<p>" . _lang('global.nokit') . "</p>";
         }
 
         return $output;
