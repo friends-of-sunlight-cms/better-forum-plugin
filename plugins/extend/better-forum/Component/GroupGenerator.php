@@ -59,7 +59,7 @@ class GroupGenerator
             'pages' => &$pages
         ]);
 
-        if (count($pages)>0) {
+        if (count($pages) > 0) {
             // forum group data
             $pg = $this->preparePageGroups($pages);
             $this->forumExtraData = $this->getExtraData($pg['ids']);
@@ -127,7 +127,7 @@ class GroupGenerator
         // render table
         $output = "\n<table class='topic-table'>\n<thead>
         <tr>
-            <th colspan = '2'> " . ($groupName !== '' ? _e($groupName) : _lang('betterforum.list.category')) . "</th>";
+            <th colspan='2'>" . ($groupName !== '' ? _e($groupName) : _lang('betterforum.list.category')) . "</th>";
         $output .= ($this->config->offsetGet('show_topics') ? "<th>" . _lang('betterforum.list.topics') . "</th>" : "");
         $output .= ($this->config->offsetGet('show_answers') ? "<th>" . _lang('betterforum.list.answers') . "</th>" : "");
         $output .= ($this->config->offsetGet('show_latest') ? "<th>" . _lang('global.lastanswer') . "</th>" : "");
@@ -140,7 +140,7 @@ class GroupGenerator
             // change highlight
             $this->hl = !$this->hl;
         }
-        $output .= " </tbody> \n</table> ";
+        $output .= "</tbody>\n</table> ";
 
         return $output;
     }
