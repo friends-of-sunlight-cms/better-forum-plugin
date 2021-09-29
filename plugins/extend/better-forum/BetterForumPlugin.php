@@ -17,7 +17,8 @@ class BetterForumPlugin extends ExtendPlugin
         Extend::regm([
             'page.plugin.reg' => [$this, 'onPagePluginReg'],
             'page.plugin.' . self::GROUP_IDT => [$this, 'onForumGroup'],
-            'admin.page.editscript' => [$this, 'onPageEditScript']
+            'page.plugin.' . self::GROUP_IDT . '.delete.do' => [$this, 'onPageDelete'],
+            'admin.page.editscript' => [$this, 'onPageEditScript'],
         ]);
     }
 
@@ -29,6 +30,11 @@ class BetterForumPlugin extends ExtendPlugin
     public function onForumGroup(array $args): void
     {
         $args['script'] = __DIR__ . '/Resources/script/page-forum-group.php';
+    }
+
+    public function onPageDelete(strany $args): void
+    {
+        $args['handled'] = true;
     }
 
     public function onPageEditScript($args): void
