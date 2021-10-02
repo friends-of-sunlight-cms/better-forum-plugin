@@ -207,9 +207,17 @@ class GroupGenerator
 
         // icon
         $icon = new ForumIcon();
-        $icon->name = ($countAnswers > 0 ? 'normal' : 'new');
-        $icon->path = Template::image('icons/topic-' . $icon->name . '.png');
-        $icon->alt = _lang('posts.topic.' . $icon->name);
+
+        $customIconFile = BetterForumPlugin::composeIconPath($rowData['id']);
+        if (is_file($customIconFile)) {
+            $icon->name = 'custom';
+            $icon->path = $customIconFile;
+            $icon->alt = 'custom icon';
+        } else {
+            $icon->name = ($countAnswers > 0 ? 'normal' : 'new');
+            $icon->path = Template::image('icons/topic-' . $icon->name . '.png');
+            $icon->alt = _lang('posts.topic.' . $icon->name);
+        }
 
         // event
         Extend::call('page.' . BetterForumPlugin::GROUP_IDT . '.item', [

@@ -4,10 +4,15 @@ namespace SunlightExtend\BetterForum;
 
 use Sunlight\Extend;
 use Sunlight\Plugin\ExtendPlugin;
+use Sunlight\Router;
+use Sunlight\User;
 use Sunlight\Util\Request;
+use Sunlight\Util\UrlHelper;
 
 class BetterForumPlugin extends ExtendPlugin
 {
+    public const ICON_DIR_PATH = SL_ROOT . 'upload/betterforum';
+    public const ICON_FILE = 'forum-%d.png';
     public const GROUP_IDT = 'bf-group';
 
     public function initialize(): void
@@ -15,6 +20,7 @@ class BetterForumPlugin extends ExtendPlugin
         parent::initialize();
 
         Extend::regm([
+            'admin.head' => [$this, 'onAdminHead'],
             'page.plugin.reg' => [$this, 'onPluginPageReg'],
             'page.plugin.' . self::GROUP_IDT => [$this, 'onPluginPageScript'],
             'page.plugin.' . self::GROUP_IDT . '.group_infos' => [$this, 'onPluginPageGroupInfos'],
@@ -22,7 +28,18 @@ class BetterForumPlugin extends ExtendPlugin
             'page.plugin.' . self::GROUP_IDT . '.delete.do' => [$this, 'onPluginPageDelete'],
             'admin.page.plugin.' . self::GROUP_IDT . '.edit' => [$this, 'onPluginPageEdit'],
             'admin.page.editscript' => [$this, 'onPluginPageEditScript'],
+            'admin.mod.content-editforum.before' => [$this, 'onBeforeForumEdit'],
         ]);
+    }
+
+    /**
+     * Inject custom CSS and JS
+     *
+     * @param array $args
+     */
+    function onAdminHead(array $args): void
+    {
+        $args['css'][] = $this->getWebPath() . '/Resources/bf-admin.css';
     }
 
     /**
@@ -74,7 +91,6 @@ class BetterForumPlugin extends ExtendPlugin
         $args['handled'] = true;
     }
 
-
     /**
      * Modification of the page editing form
      *
@@ -82,6 +98,7 @@ class BetterForumPlugin extends ExtendPlugin
      */
     public function onPluginPageEditScript(array $args): void
     {
+        // pluginpage
         if (
             Request::get('p') === 'content-editpluginpage'
             && $GLOBALS['type_idt'] == BetterForumPlugin::GROUP_IDT
@@ -92,6 +109,62 @@ class BetterForumPlugin extends ExtendPlugin
             $GLOBALS['editscript_enable_content'] = false;
             $GLOBALS['editscript_enable_layout'] = false;
             $GLOBALS['editscript_enable_show_heading'] = false;
+        }
+    }
+
+    /**
+     * @param int $forumId
+     * @return string
+     */
+    public static function composeIconPath(int $forumId): string
+    {
+        return self::ICON_DIR_PATH . '/' . sprintf(self::ICON_FILE, $forumId);
+    }
+
+    /**
+     * Modify editforum script - add icon panel
+     *
+     * @param array $args
+     */
+    public function onBeforeForumEdit(array $args): void
+    {
+        if (isset($_GET['id']) && $this->getConfig()->offsetGet('show_icon_panel')) {
+
+            $forumId = (int)Request::get('id');
+            $iconPath = self::composeIconPath($forumId);
+
+            $fmanLink = '#';
+            if (User::hasPrivilege('fileadminaccess')) {
+                $fmanLink = UrlHelper::appendParams(
+                    Router::generate('admin/index.php?p=fman'),
+                    "dir=" . urlencode(self::ICON_DIR_PATH)
+                );
+            }
+
+            $iconPanel = "<table id='icon-panel'>
+                        <thead><tr><th colspan='2'>" . _lang('betterforum.forum.iconpanel.caption') . " <small>(" . $this->getOption('name') . " plugin)</small></th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <th>
+                                    <a href='" . $fmanLink . "' target='_blank'>
+                                        <img src='./images/icons/fman/dir.png' class='icon' alt='dir'>
+                                    </a>
+                                </th>
+                                <td class='icon-panel-" . (is_dir(self::ICON_DIR_PATH) ? "ok" : "err") . "'>" . self::ICON_DIR_PATH . "</td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <a href='" . $iconPath . "' data-lightbox='icon'>
+                                        <img src='./images/icons/fman/image.png' class='icon' alt='preview'>
+                                    </a>
+                                </th>
+                                <td class='icon-panel-" . (is_file($iconPath) ? "ok" : "err") . "'>" . $iconPath . "</td>
+                            </tr>
+                        </tbody>
+                    </table>";
+
+            // render output
+            $args['output'] = $iconPanel . $args['output'];
         }
     }
 
@@ -111,6 +184,7 @@ class BetterForumPlugin extends ExtendPlugin
     protected function getConfigDefaults(): array
     {
         return [
+            'show_icon_panel' => true,
             'show_topics' => true,
             'show_answers' => true,
             'show_latest' => true,

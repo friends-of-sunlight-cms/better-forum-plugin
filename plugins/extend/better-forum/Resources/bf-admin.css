@@ -1,0 +1,41 @@
+#icon-panel {
+    min-width: 25%;
+    float: right;
+    margin-bottom: 0.5em;
+    border-collapse: collapse;
+    opacity: 0.8;
+}
+
+#icon-panel tbody td, #icon-panel tbody th, #icon-panel thead th {
+    border: 1px solid #dcdcdc;
+    padding: 0.5em;
+    color: #000;
+}
+
+#icon-panel thead th {
+    background-color: #eee;
+    padding: 0.5em;
+}
+
+#icon-panel tbody th {
+    background-color: #eee;
+    padding: 0;
+    text-align: center;
+}
+
+#icon-panel tbody td {
+    font-family: monospace;
+}
+
+#icon-panel tbody th a {
+    display: block;
+    padding: 0.5em;
+}
+
+#icon-panel tbody td.icon-panel-err {
+    background-color: #FFE7E7;
+}
+
+#icon-panel tbody td.icon-panel-ok {
+    background-color: #F1FFE7;
+}
