@@ -17,28 +17,70 @@ class BetterForumPlugin extends ExtendPlugin
         Extend::regm([
             'page.plugin.reg' => [$this, 'onPluginPageReg'],
             'page.plugin.' . self::GROUP_IDT => [$this, 'onPluginPageScript'],
+            'page.plugin.' . self::GROUP_IDT . '.group_infos' => [$this, 'onPluginPageGroupInfos'],
+            'page.plugin.' . self::GROUP_IDT . '.delete.confirm' => [$this, 'onPluginPageDelete'],
             'page.plugin.' . self::GROUP_IDT . '.delete.do' => [$this, 'onPluginPageDelete'],
+            'admin.page.plugin.' . self::GROUP_IDT . '.edit' => [$this, 'onPluginPageEdit'],
             'admin.page.editscript' => [$this, 'onPluginPageEditScript'],
         ]);
     }
 
+    /**
+     * Page type registration event
+     *
+     * @param array $args
+     */
     public function onPluginPageReg(array $args): void
     {
         $args['infos'][self::GROUP_IDT] = _lang('betterforum.type.group.label');
     }
 
+    /**
+     * Web script registration
+     *
+     * @param array $args
+     */
     public function onPluginPageScript(array $args): void
     {
         $args['script'] = __DIR__ . '/Resources/script/page-forum-group.php';
     }
 
+    /**
+     * Setting up additional information for a 'group' page
+     *
+     * @param array $args
+     */
+    public function onPluginPageGroupInfos(array $args): void
+    {
+    }
+
+    /**
+     * Page dependency processing
+     *
+     * @param array $args
+     */
+    public function onPluginPageDeleteConfirm(array $args): void
+    {
+    }
+
+    /**
+     * Page deletion processing
+     *
+     * @param array $args
+     */
     public function onPluginPageDelete(array $args): void
     {
         // if the page has no dependencies, then just allow deleting
         $args['handled'] = true;
     }
 
-    public function onPluginPageEditScript($args): void
+
+    /**
+     * Modification of the page editing form
+     *
+     * @param array $args
+     */
+    public function onPluginPageEditScript(array $args): void
     {
         if (
             Request::get('p') === 'content-editpluginpage'
@@ -52,6 +94,15 @@ class BetterForumPlugin extends ExtendPlugin
             $GLOBALS['editscript_enable_layout'] = false;
             $GLOBALS['editscript_enable_show_heading'] = false;
         }
+    }
+
+    /**
+     * Edit preparation
+     *
+     * @param array $args
+     */
+    public function onPluginPageEdit(array $args): void
+    {
     }
 
     /**
