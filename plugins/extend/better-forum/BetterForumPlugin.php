@@ -15,34 +15,36 @@ class BetterForumPlugin extends ExtendPlugin
         parent::initialize();
 
         Extend::regm([
-            'page.plugin.reg' => [$this, 'onPagePluginReg'],
-            'page.plugin.' . self::GROUP_IDT => [$this, 'onForumGroup'],
-            'page.plugin.' . self::GROUP_IDT . '.delete.do' => [$this, 'onPageDelete'],
-            'admin.page.editscript' => [$this, 'onPageEditScript'],
+            'page.plugin.reg' => [$this, 'onPluginPageReg'],
+            'page.plugin.' . self::GROUP_IDT => [$this, 'onPluginPageScript'],
+            'page.plugin.' . self::GROUP_IDT . '.delete.do' => [$this, 'onPluginPageDelete'],
+            'admin.page.editscript' => [$this, 'onPluginPageEditScript'],
         ]);
     }
 
-    public function onPagePluginReg(array $args): void
+    public function onPluginPageReg(array $args): void
     {
         $args['infos'][self::GROUP_IDT] = _lang('betterforum.type.group.label');
     }
 
-    public function onForumGroup(array $args): void
+    public function onPluginPageScript(array $args): void
     {
         $args['script'] = __DIR__ . '/Resources/script/page-forum-group.php';
     }
 
-    public function onPageDelete(array $args): void
+    public function onPluginPageDelete(array $args): void
     {
+        // if the page has no dependencies, then just allow deleting
         $args['handled'] = true;
     }
 
-    public function onPageEditScript($args): void
+    public function onPluginPageEditScript($args): void
     {
         if (
             Request::get('p') === 'content-editpluginpage'
             && $GLOBALS['type_idt'] == BetterForumPlugin::GROUP_IDT
         ) {
+            // disabling editing elements
             $GLOBALS['editscript_enable_meta'] = false;
             $GLOBALS['editscript_enable_perex'] = false;
             $GLOBALS['editscript_enable_heading'] = false;
@@ -52,6 +54,10 @@ class BetterForumPlugin extends ExtendPlugin
         }
     }
 
+    /**
+     * Plugin config
+     * @return array
+     */
     protected function getConfigDefaults(): array
     {
         return [
