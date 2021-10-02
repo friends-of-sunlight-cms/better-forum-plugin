@@ -76,6 +76,27 @@ class GroupGenerator
     }
 
     /**
+     * Returns children pages
+     *
+     * @param bool $onlyChildrens
+     * @return array
+     */
+    private function getPages(bool $onlyChildrens = false): array
+    {
+        $pages = Page::getFlatTree(
+            $this->parentId,
+            $this->maxDepth,
+            new BetterForumTreeFilter([]),
+            ['perex']
+        );
+
+        if ($onlyChildrens) {
+            $pages = Page::getTreeReader()->extractChildren($pages, $this->parentId, true);
+        }
+        return $pages;
+    }
+
+    /**
      * @param array $pages
      * @return array [ids:array, groups:array]
      */
@@ -112,6 +133,31 @@ class GroupGenerator
         ]);
 
         return ['ids' => $ids, 'groups' => $groups];
+    }
+
+    /**
+     * Returns latest answer, topic count and answer count
+     *
+     * @param array $ids
+     * @return array[]|bool
+     */
+    private function getExtraData(array $ids)
+    {
+        $result = DB::queryRows(
+            "SELECT p.id,p.home,p.xhome,p.author,p.guest,p.time,p.subject,pg.slug as topic_slug,
+                t.subject as topic_title,t.bumptime as topic_bumptime,
+                (SELECT COUNT(*) FROM " . DB::table('post') . " WHERE type=" . Post::FORUM_TOPIC . " and home = p.home and xhome=-1) as count_topics,
+                (SELECT COUNT(*) FROM " . DB::table('post') . " WHERE type=" . Post::FORUM_TOPIC . " and home = p.home and xhome!=-1) as count_answers,
+                " . $this->userQuery['column_list'] . " 
+                FROM " . DB::table('post') . " p " . $this->userQuery['joins'] . "
+                LEFT JOIN " . DB::table('post') . " t ON(t.id = p.xhome)
+                LEFT JOIN " . DB::table('page') . " pg ON(pg.id = p.home)
+                WHERE p.id IN(SELECT MAX(id) FROM " . DB::table('post') . " WHERE type = " . Post::FORUM_TOPIC . " and home IN(" . DB::arr($ids) . ") 
+                GROUP BY home)",
+            'home'
+        );
+
+        return $result;
     }
 
     /**
@@ -191,7 +237,6 @@ class GroupGenerator
             . "</tr> \n";
     }
 
-
     private function renderLatestPost(array $data): string
     {
         if ($data['author'] != -1) {
@@ -206,52 +251,5 @@ class GroupGenerator
                 <a href="' . Router::topic($topicId, $data['topic_slug']) . '" title="' . $topicTitle . '">' . StringManipulator::ellipsis($topicTitle, 24) . '</a><br>
                 <small class="post-info"><em>' . $lastAuthor . '</em> (' . GenericTemplates::renderTime($data['topic_bumptime'] ?? $data['time'], 'post') . ')</small>
                 </span>';
-    }
-
-    /**
-     * Returns children pages
-     *
-     * @param bool $onlyChildrens
-     * @return array
-     */
-    private function getPages(bool $onlyChildrens = false): array
-    {
-        $pages = Page::getFlatTree(
-            $this->parentId,
-            $this->maxDepth,
-            new BetterForumTreeFilter([]),
-            ['perex']
-        );
-
-        if ($onlyChildrens) {
-            $pages = Page::getTreeReader()->extractChildren($pages, $this->parentId, true);
-        }
-        return $pages;
-    }
-
-
-    /**
-     * Returns latest answer, topic count and answer count
-     *
-     * @param array $ids
-     * @return array[]|bool
-     */
-    private function getExtraData(array $ids)
-    {
-        $result = DB::queryRows(
-            "SELECT p . id,p . home,p . xhome,p . author,p . guest,p . time,p . subject,pg . slug as topic_slug,
-                t . subject as topic_title,t . bumptime as topic_bumptime,
-                (SELECT COUNT(*) FROM " . DB::table('post') . " WHERE type = " . Post::FORUM_TOPIC . " and home = p . home and xhome = -1) as count_topics,
-                (SELECT COUNT(*) FROM " . DB::table('post') . " WHERE type = " . Post::FORUM_TOPIC . " and home = p . home and xhome != -1) as count_answers,
-                " . $this->userQuery['column_list'] . " 
-                FROM " . DB::table('post') . " p " . $this->userQuery['joins'] . "
-                LEFT JOIN " . DB::table('post') . " t ON(t . id = p . xhome)
-                LEFT JOIN " . DB::table('page') . " pg ON(pg . id = p . home)
-                WHERE p . id IN(SELECT MAX(id) FROM " . DB::table('post') . " WHERE type = " . Post::FORUM_TOPIC . " and home IN(" . DB::arr($ids) . ") 
-                GROUP BY home)",
-            'home'
-        );
-
-        return $result;
     }
 }
