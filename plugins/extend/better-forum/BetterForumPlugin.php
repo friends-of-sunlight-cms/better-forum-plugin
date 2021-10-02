@@ -88,7 +88,6 @@ class BetterForumPlugin extends ExtendPlugin
         ) {
             // disabling editing elements
             $GLOBALS['editscript_enable_meta'] = false;
-            $GLOBALS['editscript_enable_perex'] = false;
             $GLOBALS['editscript_enable_heading'] = false;
             $GLOBALS['editscript_enable_content'] = false;
             $GLOBALS['editscript_enable_layout'] = false;
