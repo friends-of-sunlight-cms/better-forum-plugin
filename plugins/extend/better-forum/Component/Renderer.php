@@ -2,70 +2,42 @@
 
 namespace SunlightExtend\BetterForum\Component;
 
-use Sunlight\Core;
-use Sunlight\Database\Database as DB;
 use Sunlight\Extend;
 use Sunlight\GenericTemplates;
-use Sunlight\Page\Page;
-use Sunlight\Post\Post;
 use Sunlight\Post\PostService;
 use Sunlight\Router;
 use Sunlight\Template;
-use Sunlight\User;
-use Sunlight\Util\ConfigurationFile;
 use Sunlight\Util\StringManipulator;
 use SunlightExtend\BetterForum\BetterForumPlugin;
-use SunlightExtend\BetterForum\Component\Filter\BetterForumTreeFilter;
 
-class GroupGenerator
+class Renderer
 {
-    /** @var ConfigurationFile */
-    private $config;
-    /** @var int */
-    private $parentId;
-    /** @var int */
-    private $maxDepth;
-    /** @var array */
-    private $forumExtraData = [];
-    /** @var array data for queries with users */
-    private $userQuery;
     /** @var bool */
-    private $hl = true;
+    private $hl = false;
+    /** @var array */
+    private $groups = [];
 
     /**
-     * @param int $parentForumGroupId
+     * @param BetterForumPlugin $betterForumPlugin
+     * @param array $userQuery
      */
-    public function __construct(int $parentForumGroupId)
+    public function __construct(BetterForumPlugin $betterForumPlugin, array $groups, array $userQuery)
     {
         // plugin config
-        $this->config = Core::$pluginManager->getExtend('better-forum')->getConfig();
-
-        $this->parentId = $parentForumGroupId;
-        $this->maxDepth = 2;
-
-        $this->userQuery = User::createQuery('p.author');
+        $this->config = $betterForumPlugin->getConfig();
+        $this->groups = $groups;
+        $this->userQuery = $userQuery;
     }
 
     /**
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         $output = "";
-        $pages = $this->getPages(true);
-
-        // event
-        Extend::call('page.' . BetterForumPlugin::GROUP_IDT . '.pages', [
-            'pages' => &$pages
-        ]);
-
-        if (count($pages) > 0) {
-            // forum group data
-            $pg = $this->preparePageGroups($pages);
-            $this->forumExtraData = $this->getExtraData($pg['ids']);
-
+        if (count($this->groups) > 0) {
             // render tables
-            foreach ($pg['groups'] as $group) {
+            foreach ($this->groups as $group) {
                 $output .= $this->renderTable($group['rows'], $group['group_name']);
             }
         } else {
@@ -75,89 +47,31 @@ class GroupGenerator
         return $output;
     }
 
-    /**
-     * Returns children pages
-     *
-     * @param bool $onlyChildrens
-     * @return array
-     */
-    private function getPages(bool $onlyChildrens = false): array
+    public function renderLatestAnswers(array $answers): string
     {
-        $pages = Page::getFlatTree(
-            $this->parentId,
-            $this->maxDepth,
-            new BetterForumTreeFilter([]),
-            ['perex']
-        );
-
-        if ($onlyChildrens) {
-            $pages = Page::getTreeReader()->extractChildren($pages, $this->parentId, true);
-        }
-        return $pages;
-    }
-
-    /**
-     * @param array $pages
-     * @return array [ids:array, groups:array]
-     */
-    private function preparePageGroups(array $pages): array
-    {
-        $ids = [];
-        $groups = [];
-        foreach ($pages as $page) {
-            if ($page['type'] == Page::FORUM) {
-                // set category name by parent title
-                $groups[$page['node_parent']]['group_name'] = $groups[$page['node_parent']]['group_name'] ?? '';
-                // add row
-                $groups[$page['node_parent']]['rows'][$page['id']] = $page;
-                $ids[] = $page['id'];
-            } elseif (
-                $page['type'] == Page::PLUGIN
-                && $page['type_idt'] == BetterForumPlugin::GROUP_IDT
-            ) {
-                // if type is bf-group then set only group_name
-                $groups[$page['id']] = ['group_name' => $page['title'], 'rows' => []];
+        $output = "\n<div class='post-answer-list'>\n<h3>" . _lang('posts.forum.lastact') . "</h3>\n";
+        if (count($answers) > 0) {
+            $output .= "<table class='topic-latest'>\n";
+            foreach ($answers as $answer){
+                if ($answer['author'] != -1) {
+                    $author = Router::userFromQuery($this->userQuery, $answer);
+                } else {
+                    $author = "<span class='post-author-guest'>" . PostService::renderGuestName($answer['guest']) . "</span>";
+                }
+                $output .= "<tr>
+                                <td><a href='" . Router::topic($answer['topic_id'], $answer['topic_slug']) . "'>" . $answer['topic_subject'] . "</a></td>
+                                <td>" . $author . "</td>
+                                <td>" . GenericTemplates::renderTime($answer['time'], 'post') . "</td>
+                            </tr>\n";
             }
+            $output .= "</table>\n\n";
+
+        } else {
+            $output .= "<p>" . _lang('global.nokit') . "</p>";
         }
+        $output .= "</div>\n";
 
-        // remove groups without rows
-        foreach ($groups as $k => $group) {
-            if (count($group['rows']) === 0) {
-                unset($groups[$k]);
-            }
-        }
-
-        // event
-        Extend::call('page.' . BetterForumPlugin::GROUP_IDT . '.groups', [
-            'groups' => &$groups
-        ]);
-
-        return ['ids' => $ids, 'groups' => $groups];
-    }
-
-    /**
-     * Returns latest answer, topic count and answer count
-     *
-     * @param array $ids
-     * @return array[]|bool
-     */
-    private function getExtraData(array $ids)
-    {
-        $result = DB::queryRows(
-            "SELECT p.id,p.home,p.xhome,p.author,p.guest,p.time,p.subject,pg.slug as topic_slug,
-                t.subject as topic_title,t.bumptime as topic_bumptime,
-                (SELECT COUNT(*) FROM " . DB::table('post') . " WHERE type=" . Post::FORUM_TOPIC . " and home = p.home and xhome=-1) as count_topics,
-                (SELECT COUNT(*) FROM " . DB::table('post') . " WHERE type=" . Post::FORUM_TOPIC . " and home = p.home and xhome!=-1) as count_answers,
-                " . $this->userQuery['column_list'] . " 
-                FROM " . DB::table('post') . " p " . $this->userQuery['joins'] . "
-                LEFT JOIN " . DB::table('post') . " t ON(t.id = p.xhome)
-                LEFT JOIN " . DB::table('page') . " pg ON(pg.id = p.home)
-                WHERE p.id IN(SELECT MAX(id) FROM " . DB::table('post') . " WHERE type = " . Post::FORUM_TOPIC . " and home IN(" . DB::arr($ids) . ") 
-                GROUP BY home)",
-            'home'
-        );
-
-        return $result;
+        return $output;
     }
 
     /**
@@ -168,7 +82,7 @@ class GroupGenerator
     private function renderTable(array $rows, string $groupName = ''): string
     {
         // reset highlight
-        $this->hl = true;
+        $this->hl = false;
 
         // render table
         $output = "\n<table class='topic-table'>\n<thead>
@@ -198,10 +112,13 @@ class GroupGenerator
      */
     private function renderRow(array $rowData)
     {
-        $countTopics = $this->forumExtraData[$rowData['id']]['count_topics'] ?? 0;
-        $countAnswers = $this->forumExtraData[$rowData['id']]['count_answers'] ?? 0;
-        $latestPost = (isset($this->forumExtraData[$rowData['id']])
-            ? $this->renderLatestPost($this->forumExtraData[$rowData['id']])
+        // counters
+        $countTopics = $rowData['_extra']['count_topics'] ?? 0;
+        $countAnswers = $rowData['_extra']['count_answers'] ?? 0;
+
+        // latest post
+        $latestPost = (isset($rowData['_extra']['latest_post'])
+            ? $this->renderLatestPost($rowData['_extra']['latest_post'])
             : "---"
         );
 
@@ -260,4 +177,5 @@ class GroupGenerator
                 <small class="post-info"><em>' . $lastAuthor . '</em> (' . GenericTemplates::renderTime($data['topic_bumptime'] ?? $data['time'], 'post') . ')</small>
                 </span>';
     }
+
 }

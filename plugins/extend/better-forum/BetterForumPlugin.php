@@ -3,6 +3,7 @@
 namespace SunlightExtend\BetterForum;
 
 use Sunlight\Extend;
+use Sunlight\Plugin\Action\PluginAction;
 use Sunlight\Plugin\ExtendPlugin;
 use Sunlight\Router;
 use Sunlight\User;
@@ -23,10 +24,7 @@ class BetterForumPlugin extends ExtendPlugin
             'admin.head' => [$this, 'onAdminHead'],
             'page.plugin.reg' => [$this, 'onPluginPageReg'],
             'page.plugin.' . self::GROUP_IDT => [$this, 'onPluginPageScript'],
-            'page.plugin.' . self::GROUP_IDT . '.group_infos' => [$this, 'onPluginPageGroupInfos'],
-            'page.plugin.' . self::GROUP_IDT . '.delete.confirm' => [$this, 'onPluginPageDelete'],
             'page.plugin.' . self::GROUP_IDT . '.delete.do' => [$this, 'onPluginPageDelete'],
-            'admin.page.plugin.' . self::GROUP_IDT . '.edit' => [$this, 'onPluginPageEdit'],
             'admin.page.editscript' => [$this, 'onPluginPageEditScript'],
             'admin.mod.content-editforum.before' => [$this, 'onBeforeForumEdit'],
         ]);
@@ -63,24 +61,6 @@ class BetterForumPlugin extends ExtendPlugin
     }
 
     /**
-     * Setting up additional information for a 'group' page
-     *
-     * @param array $args
-     */
-    public function onPluginPageGroupInfos(array $args): void
-    {
-    }
-
-    /**
-     * Page dependency processing
-     *
-     * @param array $args
-     */
-    public function onPluginPageDeleteConfirm(array $args): void
-    {
-    }
-
-    /**
      * Page deletion processing
      *
      * @param array $args
@@ -110,15 +90,6 @@ class BetterForumPlugin extends ExtendPlugin
             $GLOBALS['editscript_enable_layout'] = false;
             $GLOBALS['editscript_enable_show_heading'] = false;
         }
-    }
-
-    /**
-     * @param int $forumId
-     * @return string
-     */
-    public static function composeIconPath(int $forumId): string
-    {
-        return self::ICON_DIR_PATH . '/' . sprintf(self::ICON_FILE, $forumId);
     }
 
     /**
@@ -169,13 +140,19 @@ class BetterForumPlugin extends ExtendPlugin
     }
 
     /**
-     * Edit preparation
-     *
-     * @param array $args
+     * @param int $forumId
+     * @return string
      */
-    public function onPluginPageEdit(array $args): void
+    public static function composeIconPath(int $forumId): string
     {
+        return self::ICON_DIR_PATH . '/' . sprintf(self::ICON_FILE, $forumId);
     }
+
+    /**
+     * ============================================================================
+     *  EXTEND CONFIGURATION
+     * ============================================================================
+     */
 
     /**
      * Plugin config
@@ -188,7 +165,17 @@ class BetterForumPlugin extends ExtendPlugin
             'show_topics' => true,
             'show_answers' => true,
             'show_latest' => true,
+            'show_latest_answers' => true,
+            'pos_latest_answers' => 1, // 0 = at the top; 1 = at the bottom
         ];
+    }
+
+    public function getAction(string $name): ?PluginAction
+    {
+        if ($name === 'config') {
+            return new Configuration($this);
+        }
+        return parent::getAction($name);
     }
 }
 
