@@ -2,7 +2,7 @@
 
 return [
     // admin
-    'type.group.label' => 'fórum group',
+    'type.group.label' => 'forum group',
     'forum.iconpanel.caption' => 'Forum icon',
     // plugin config
     'config.show_icon_panel' => 'Panel in forum editing',
