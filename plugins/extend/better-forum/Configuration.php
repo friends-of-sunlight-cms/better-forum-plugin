@@ -42,8 +42,8 @@ class Configuration extends ConfigAction
                 'label' => _lang('betterforum.config.pos_latest_answers'),
                 'input' => _buffer(function () use ($config) { ?>
                     <select name="config[pos_latest_answers]">
-                        <option value="1" <?= $config['pos_latest_answers'] === true ? ' selected' : '' ?>><?= _lang('betterforum.config.on_top') ?></option>
-                        <option value="0" <?= $config['pos_latest_answers'] === false ? ' selected' : '' ?>><?= _lang('betterforum.config.on_bottom') ?></option>
+                        <option value="0" <?= $config['pos_latest_answers'] === 0 ? ' selected' : '' ?>><?= _lang('betterforum.config.on_top') ?></option>
+                        <option value="1" <?= $config['pos_latest_answers'] === 1 ? ' selected' : '' ?>><?= _lang('betterforum.config.on_bottom') ?></option>
                     </select>
                 <?php }),
             ],
