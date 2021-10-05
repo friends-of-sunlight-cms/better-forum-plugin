@@ -12,7 +12,7 @@ use Sunlight\Util\UrlHelper;
 
 class BetterForumPlugin extends ExtendPlugin
 {
-    public const ICON_DIR_PATH = SL_ROOT . 'upload/betterforum';
+    public const ICON_DIR_PATH = 'upload/betterforum';
     public const ICON_FILE = 'forum-%d.png';
     public const GROUP_IDT = 'bf-group';
 

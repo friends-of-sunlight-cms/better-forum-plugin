@@ -128,7 +128,7 @@ class Renderer
         $customIconFile = BetterForumPlugin::composeIconPath($rowData['id']);
         if (is_file($customIconFile)) {
             $icon->name = 'custom';
-            $icon->path = $customIconFile;
+            $icon->path = Router::generate($customIconFile);
             $icon->alt = 'custom icon';
         } else {
             $icon->name = ($countAnswers > 0 ? 'normal' : 'new');
