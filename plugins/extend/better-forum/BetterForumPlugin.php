@@ -106,10 +106,7 @@ class BetterForumPlugin extends ExtendPlugin
 
             $fmanLink = '#';
             if (User::hasPrivilege('fileadminaccess')) {
-                $fmanLink = UrlHelper::appendParams(
-                    Router::generate('admin/index.php?p=fman'),
-                    "dir=" . urlencode(self::ICON_DIR_PATH)
-                );
+                $fmanLink = Router::admin('fman', ['query' => ['dir' => self::ICON_DIR_PATH]]);
             }
 
             $iconPanel = "<table id='icon-panel'>
@@ -117,7 +114,7 @@ class BetterForumPlugin extends ExtendPlugin
                         <tbody>
                             <tr>
                                 <th>
-                                    <a href='" . $fmanLink . "' target='_blank'>
+                                    <a href='" . _e($fmanLink) . "' target='_blank'>
                                         <img src='./images/icons/fman/dir.png' class='icon' alt='dir'>
                                     </a>
                                 </th>

@@ -54,12 +54,12 @@ class Renderer
             $output .= "<table class='topic-latest'>\n";
             foreach ($answers as $answer){
                 if ($answer['author'] != -1) {
-                    $author = Router::userFromQuery($this->userQuery, $answer);
+                    $author = _e(Router::userFromQuery($this->userQuery, $answer));
                 } else {
                     $author = "<span class='post-author-guest'>" . PostService::renderGuestName($answer['guest']) . "</span>";
                 }
                 $output .= "<tr>
-                                <td><a href='" . Router::topic($answer['topic_id'], $answer['topic_slug']) . "'>" . $answer['topic_subject'] . "</a></td>
+                                <td><a href='" . _e(Router::topic($answer['topic_id'], $answer['topic_slug'])) . "'>" . $answer['topic_subject'] . "</a></td>
                                 <td>" . $author . "</td>
                                 <td>" . GenericTemplates::renderTime($answer['time'], 'post') . "</td>
                             </tr>\n";
@@ -128,7 +128,7 @@ class Renderer
         $customIconFile = BetterForumPlugin::composeIconPath($rowData['id']);
         if (is_file($customIconFile)) {
             $icon->name = 'custom';
-            $icon->path = Router::generate($customIconFile);
+            $icon->path = Router::file($customIconFile);
             $icon->alt = 'custom icon';
         } else {
             $icon->name = ($countAnswers > 0 ? 'normal' : 'new');
@@ -146,12 +146,12 @@ class Renderer
 
         return " <tr class='topic-" . _e($icon->name) . ($this->hl ? ' topic-hl' : '') . "'>
             <td class='topic-icon-cell'>
-                <a href='" . Router::page($rowData['id'], $rowData['slug']) . "'>
+                <a href='" . _e(Router::page($rowData['id'], $rowData['slug'])) . "'>
                     <img src='" . _e($icon->path) . "' alt='" . _e($icon->alt) . "'>
                 </a>
             </td>
             <td class='topic-main-cell'>
-                <a href='" . Router::page($rowData['id'], $rowData['slug']) . "'> " . $rowData['title'] . "</a><br>
+                <a href='" . _e(Router::page($rowData['id'], $rowData['slug'])) . "'> " . $rowData['title'] . "</a><br>
                 <small> "
             . ($rowData['perex'] !== '' ? StringManipulator::ellipsis($rowData['perex'], 64) : '') .
             "</small>
@@ -165,7 +165,7 @@ class Renderer
     private function renderLatestPost(array $data): string
     {
         if ($data['author'] != -1) {
-            $lastAuthor = Router::userFromQuery($this->userQuery, $data, ['class' => 'post-author', 'max_len' => 16]);
+            $lastAuthor = _e(Router::userFromQuery($this->userQuery, $data, ['class' => 'post-author', 'max_len' => 16]));
         } else {
             $lastAuthor = "<span class='post-author-guest'> " . StringManipulator::ellipsis(PostService::renderGuestName($data['guest']), 16) . "</span> ";
         }
@@ -173,7 +173,7 @@ class Renderer
         $topicTitle = $data['topic_title'] ?? $data['subject'];
         $topicId = ($data['xhome'] != -1 ? $data['xhome'] : $data['id']);
         return '<span class="answer-latest">
-                <a href="' . Router::topic($topicId, $data['topic_slug']) . '" title="' . $topicTitle . '">' . StringManipulator::ellipsis($topicTitle, 24) . '</a><br>
+                <a href="' . _e(Router::topic($topicId, $data['topic_slug'])) . '" title="' . $topicTitle . '">' . StringManipulator::ellipsis($topicTitle, 24) . '</a><br>
                 <small class="post-info"><em>' . $lastAuthor . '</em> (' . GenericTemplates::renderTime($data['topic_bumptime'] ?? $data['time'], 'post') . ')</small>
                 </span>';
     }
