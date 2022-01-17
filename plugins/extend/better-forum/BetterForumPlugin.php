@@ -12,7 +12,7 @@ use Sunlight\Util\UrlHelper;
 
 class BetterForumPlugin extends ExtendPlugin
 {
-    public const ICON_DIR_PATH = 'upload/betterforum';
+    public const ICON_DIR_PATH = SL_ROOT . 'upload/betterforum/';
     public const ICON_FILE = 'forum-%d.png';
     public const GROUP_IDT = 'bf-group';
 
@@ -142,7 +142,7 @@ class BetterForumPlugin extends ExtendPlugin
      */
     public static function composeIconPath(int $forumId): string
     {
-        return self::ICON_DIR_PATH . '/' . sprintf(self::ICON_FILE, $forumId);
+        return self::ICON_DIR_PATH . sprintf(self::ICON_FILE, $forumId);
     }
 
     /**
