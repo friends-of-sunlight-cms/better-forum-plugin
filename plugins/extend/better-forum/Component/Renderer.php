@@ -54,7 +54,7 @@ class Renderer
             $output .= "<table class='topic-latest'>\n";
             foreach ($answers as $answer){
                 if ($answer['author'] != -1) {
-                    $author = _e(Router::userFromQuery($this->userQuery, $answer));
+                    $author = Router::userFromQuery($this->userQuery, $answer);
                 } else {
                     $author = "<span class='post-author-guest'>" . PostService::renderGuestName($answer['guest']) . "</span>";
                 }
@@ -165,7 +165,7 @@ class Renderer
     private function renderLatestPost(array $data): string
     {
         if ($data['author'] != -1) {
-            $lastAuthor = _e(Router::userFromQuery($this->userQuery, $data, ['class' => 'post-author', 'max_len' => 16]));
+            $lastAuthor = Router::userFromQuery($this->userQuery, $data, ['class' => 'post-author', 'max_len' => 16]);
         } else {
             $lastAuthor = "<span class='post-author-guest'> " . StringManipulator::ellipsis(PostService::renderGuestName($data['guest']), 16) . "</span> ";
         }
