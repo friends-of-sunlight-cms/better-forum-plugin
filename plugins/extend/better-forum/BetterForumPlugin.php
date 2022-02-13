@@ -8,7 +8,6 @@ use Sunlight\Plugin\ExtendPlugin;
 use Sunlight\Router;
 use Sunlight\User;
 use Sunlight\Util\Request;
-use Sunlight\Util\UrlHelper;
 
 class BetterForumPlugin extends ExtendPlugin
 {
@@ -20,14 +19,15 @@ class BetterForumPlugin extends ExtendPlugin
     {
         parent::initialize();
 
-        Extend::regm([
-            'admin.head' => [$this, 'onAdminHead'],
-            'page.plugin.reg' => [$this, 'onPluginPageReg'],
-            'page.plugin.' . self::GROUP_IDT => [$this, 'onPluginPageScript'],
-            'page.plugin.' . self::GROUP_IDT . '.delete.do' => [$this, 'onPluginPageDelete'],
-            'admin.page.editscript' => [$this, 'onPluginPageEditScript'],
-            'admin.mod.content-editforum.before' => [$this, 'onBeforeForumEdit'],
-        ]);
+        Extend::regm(
+            [
+                'admin.head' => [$this, 'onAdminHead'],
+                'page.plugin.reg' => [$this, 'onPluginPageReg'],
+                'page.plugin.' . self::GROUP_IDT => [$this, 'onPluginPageScript'],
+                'page.plugin.' . self::GROUP_IDT . '.delete.do' => [$this, 'onPluginPageDelete'],
+                'admin.page.editscript' => [$this, 'onPluginPageEditScript'],
+            ]
+        );
     }
 
     /**
@@ -78,9 +78,10 @@ class BetterForumPlugin extends ExtendPlugin
      */
     public function onPluginPageEditScript(array $args): void
     {
+        global $_admin;
         // pluginpage
         if (
-            Request::get('p') === 'content-editpluginpage'
+            $_admin->currentModule === 'content-editpluginpage'
             && $GLOBALS['type_idt'] == BetterForumPlugin::GROUP_IDT
         ) {
             // disabling editing elements
@@ -90,17 +91,21 @@ class BetterForumPlugin extends ExtendPlugin
             $GLOBALS['editscript_enable_layout'] = false;
             $GLOBALS['editscript_enable_show_heading'] = false;
         }
+
+        // forum
+        if ($_admin->currentModule === 'content-editforum') {
+            $GLOBALS['editscript_setting_extra'] = $this->renderIconPanel();
+        }
     }
 
     /**
      * Modify editforum script - add icon panel
      *
-     * @param array $args
+     * @return string
      */
-    public function onBeforeForumEdit(array $args): void
+    private function renderIconPanel(): string
     {
         if (isset($_GET['id']) && $this->getConfig()->offsetGet('show_icon_panel')) {
-
             $forumId = (int)Request::get('id');
             $iconPath = self::composeIconPath($forumId);
 
@@ -109,31 +114,35 @@ class BetterForumPlugin extends ExtendPlugin
                 $fmanLink = Router::admin('fman', ['query' => ['dir' => self::ICON_DIR_PATH]]);
             }
 
-            $iconPanel = "<table id='icon-panel'>
-                        <thead><tr><th colspan='2'>" . _lang('betterforum.forum.iconpanel.caption') . " <small>(" . $this->getOption('name') . " plugin)</small></th></tr></thead>
-                        <tbody>
-                            <tr>
-                                <th>
-                                    <a href='" . _e($fmanLink) . "' target='_blank'>
-                                        <img src='./images/icons/fman/dir.png' class='icon' alt='dir'>
-                                    </a>
-                                </th>
-                                <td class='icon-panel-" . (is_dir(self::ICON_DIR_PATH) ? "ok" : "err") . "'>" . self::ICON_DIR_PATH . "</td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <a href='" . $iconPath . "' data-lightbox='icon'>
-                                        <img src='./images/icons/fman/image.png' class='icon' alt='preview'>
-                                    </a>
-                                </th>
-                                <td class='icon-panel-" . (is_file($iconPath) ? "ok" : "err") . "'>" . $iconPath . "</td>
-                            </tr>
-                        </tbody>
-                    </table>";
+            $iconPanel = "<fieldset>
+                            <legend>" . _lang('betterforum.forum.iconpanel.caption')
+                            . " <small>(" . $this->getOption('name') . " plugin)</small>
+                            </legend>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td class='icon-panel-" . (is_dir(self::ICON_DIR_PATH) ? "ok" : "err") . "'>
+                                            <a href='" . _e($fmanLink) . "' target='_blank'>
+                                                <img src='./images/icons/fman/dir.png' class='icon' alt='dir'>
+                                            </a>"
+                                            . self::ICON_DIR_PATH
+                                        . "</td>
+                                    </tr>
+                                    <tr>
+                                        <td class='icon-panel-" . (is_file($iconPath) ? "ok" : "err") . "'>
+                                            <a href='" . $iconPath . "' data-lightbox='icon'>
+                                                <img src='./images/icons/fman/image.png' class='icon' alt='preview'>
+                                            </a>"
+                                            . $iconPath
+                                        . "</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                          </fieldset>";
 
-            // render output
-            $args['output'] = $iconPanel . $args['output'];
+            return $iconPanel;
         }
+        return '';
     }
 
     /**
