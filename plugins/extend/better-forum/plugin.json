@@ -3,7 +3,9 @@
     "name": "Better Forum",
     "description": "New page types for forums",
     "version": "1.0.0",
-    "api": "^8.0",
+    "environment": {
+        "system": "^8.0"
+    },
     "url": "https://jdanek.eu",
     "class": "BetterForumPlugin",
     "langs": {
