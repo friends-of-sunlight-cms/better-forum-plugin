@@ -8,7 +8,6 @@ Allows you to create forum groups and display them together.
 Requirements
 ************
 
-- PHP 7.1+
 - SunLight CMS 8
 
 Installation
