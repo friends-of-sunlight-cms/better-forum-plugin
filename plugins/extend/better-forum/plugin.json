@@ -9,7 +9,7 @@
     "url": "https://github.com/friends-of-sunlight-cms/",
     "class": "BetterForumPlugin",
     "langs": {
-        "betterforum": "Resources/languages/"
+        "betterforum": "resources/languages/"
     },
     "events": [],
     "events.web": [],

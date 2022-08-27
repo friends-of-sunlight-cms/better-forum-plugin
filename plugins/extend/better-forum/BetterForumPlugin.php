@@ -37,7 +37,7 @@ class BetterForumPlugin extends ExtendPlugin
      */
     function onAdminHead(array $args): void
     {
-        $args['css'][] = $this->getWebPath() . '/Resources/bf-admin.css';
+        $args['css'][] = $this->getWebPath() . '/resources/bf-admin.css';
     }
 
     /**
@@ -57,7 +57,7 @@ class BetterForumPlugin extends ExtendPlugin
      */
     public function onPluginPageScript(array $args): void
     {
-        $args['script'] = __DIR__ . '/Resources/script/page-forum-group.php';
+        $args['script'] = __DIR__ . '/resources/script/page-forum-group.php';
     }
 
     /**
