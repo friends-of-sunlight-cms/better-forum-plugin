@@ -2,6 +2,7 @@
 
 namespace SunlightExtend\BetterForum;
 
+use Sunlight\Core;
 use Sunlight\Extend;
 use Sunlight\Plugin\Action\PluginAction;
 use Sunlight\Plugin\ExtendPlugin;
@@ -28,6 +29,12 @@ class BetterForumPlugin extends ExtendPlugin
                 'admin.page.editscript' => [$this, 'onPluginPageEditScript'],
             ]
         );
+    }
+
+
+    public static function getInstance(): ?ExtendPlugin
+    {
+        return Core::$pluginManager->getPlugins()->getExtend('better-forum');
     }
 
     /**
@@ -116,7 +123,7 @@ class BetterForumPlugin extends ExtendPlugin
 
             $iconPanel = "<fieldset>
                             <legend>" . _lang('betterforum.forum.iconpanel.caption')
-                            . " <small>(" . $this->getOption('name') . " plugin)</small>
+                . " <small>(" . $this->getOption('name') . " plugin)</small>
                             </legend>
                             <table>
                                 <tbody>
@@ -125,16 +132,16 @@ class BetterForumPlugin extends ExtendPlugin
                                             <a href='" . _e($fmanLink) . "' target='_blank'>
                                                 <img src='./images/icons/fman/dir.png' class='icon' alt='dir'>
                                             </a>"
-                                            . self::ICON_DIR_PATH
-                                        . "</td>
+                . self::ICON_DIR_PATH
+                . "</td>
                                     </tr>
                                     <tr>
                                         <td class='icon-panel-" . (is_file($iconPath) ? "ok" : "err") . "'>
                                             <a href='" . $iconPath . "' data-lightbox='icon'>
                                                 <img src='./images/icons/fman/image.png' class='icon' alt='preview'>
                                             </a>"
-                                            . $iconPath
-                                        . "</td>
+                . $iconPath
+                . "</td>
                                     </tr>
                                 </tbody>
                             </table>
