@@ -39,8 +39,6 @@ class BetterForumPlugin extends ExtendPlugin
 
     /**
      * Inject custom CSS and JS
-     *
-     * @param array $args
      */
     function onAdminHead(array $args): void
     {
@@ -48,9 +46,7 @@ class BetterForumPlugin extends ExtendPlugin
     }
 
     /**
-     * Page type registration event
-     *
-     * @param array $args
+     * Page type registration events
      */
     public function onPluginPageReg(array $args): void
     {
@@ -59,8 +55,6 @@ class BetterForumPlugin extends ExtendPlugin
 
     /**
      * Web script registration
-     *
-     * @param array $args
      */
     public function onPluginPageScript(array $args): void
     {
@@ -69,8 +63,6 @@ class BetterForumPlugin extends ExtendPlugin
 
     /**
      * Page deletion processing
-     *
-     * @param array $args
      */
     public function onPluginPageDelete(array $args): void
     {
@@ -80,8 +72,6 @@ class BetterForumPlugin extends ExtendPlugin
 
     /**
      * Modification of the page editing form
-     *
-     * @param array $args
      */
     public function onPluginPageEditScript(array $args): void
     {
@@ -107,8 +97,6 @@ class BetterForumPlugin extends ExtendPlugin
 
     /**
      * Modify editforum script - add icon panel
-     *
-     * @return string
      */
     private function renderIconPanel(): string
     {
@@ -152,10 +140,6 @@ class BetterForumPlugin extends ExtendPlugin
         return '';
     }
 
-    /**
-     * @param int $forumId
-     * @return string
-     */
     public static function composeIconPath(int $forumId): string
     {
         return self::ICON_DIR_PATH . sprintf(self::ICON_FILE, $forumId);
@@ -167,10 +151,6 @@ class BetterForumPlugin extends ExtendPlugin
      * ============================================================================
      */
 
-    /**
-     * Plugin config
-     * @return array
-     */
     protected function getConfigDefaults(): array
     {
         return [
