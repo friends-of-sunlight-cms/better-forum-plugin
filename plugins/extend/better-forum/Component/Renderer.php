@@ -16,6 +16,10 @@ class Renderer
     private $hl = false;
     /** @var array */
     private $groups = [];
+    /** @var ConfigurationFile  */
+    private $config;
+    /** @var array  */
+    private $userQuery;
 
     /**
      * @param BetterForumPlugin $betterForumPlugin

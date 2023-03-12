@@ -25,6 +25,8 @@ class ForumReader
 
     /** @var bool */
     private $initialited = false;
+    /** @var array */
+    private $userQuery;
 
     /**
      * @param int $parentId

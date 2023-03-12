@@ -11,6 +11,10 @@ use SunlightExtend\BetterForum\BetterForumPlugin;
 
 class BetterForumTreeFilter implements TreeFilterInterface
 {
+    /** @var array */
+    private $options;
+    /** @var string */
+    private $sql;
 
     /**
      * Supported keys in $options:
