@@ -31,12 +31,6 @@ class BetterForumPlugin extends ExtendPlugin
         );
     }
 
-
-    public static function getInstance(): ?ExtendPlugin
-    {
-        return Core::$pluginManager->getPlugins()->getExtend('better-forum');
-    }
-
     /**
      * Inject custom CSS and JS
      */
