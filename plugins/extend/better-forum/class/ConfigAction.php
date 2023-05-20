@@ -2,11 +2,11 @@
 
 namespace SunlightExtend\BetterForum;
 
-use Sunlight\Plugin\Action\ConfigAction;
+use Sunlight\Plugin\Action\ConfigAction as BaseConfigAction;
 use Sunlight\Util\ConfigurationFile;
 use Sunlight\Util\Form;
 
-class Configuration extends ConfigAction
+class ConfigAction extends BaseConfigAction
 {
     protected function getFields(): array
     {

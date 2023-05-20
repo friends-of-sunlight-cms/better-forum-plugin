@@ -36,7 +36,7 @@ class BetterForumPlugin extends ExtendPlugin
      */
     function onAdminHead(array $args): void
     {
-        $args['css'][] = $this->getWebPath() . '/resources/bf-admin.css';
+        $args['css'][] = $this->getWebPath() . '/public/bf-admin.css';
     }
 
     /**
@@ -52,7 +52,7 @@ class BetterForumPlugin extends ExtendPlugin
      */
     public function onPluginPageScript(array $args): void
     {
-        $args['script'] = __DIR__ . '/resources/script/page-forum-group.php';
+        $args['script'] = __DIR__ . DIRECTORY_SEPARATOR . '../public/script/page-forum-group.php';
     }
 
     /**
@@ -112,7 +112,7 @@ class BetterForumPlugin extends ExtendPlugin
                                     <tr>
                                         <td class='icon-panel-" . (is_dir(self::ICON_DIR_PATH) ? "ok" : "err") . "'>
                                             <a href='" . _e($fmanLink) . "' target='_blank'>
-                                                <img src='./images/icons/fman/dir.png' class='icon' alt='dir'>
+                                                <img src='./public/images/icons/fman/dir.png' class='icon' alt='dir'>
                                             </a>"
                 . self::ICON_DIR_PATH
                 . "</td>
@@ -120,7 +120,7 @@ class BetterForumPlugin extends ExtendPlugin
                                     <tr>
                                         <td class='icon-panel-" . (is_file($iconPath) ? "ok" : "err") . "'>
                                             <a href='" . $iconPath . "' data-lightbox='icon'>
-                                                <img src='./images/icons/fman/image.png' class='icon' alt='preview'>
+                                                <img src='./public/images/icons/fman/image.png' class='icon' alt='preview'>
                                             </a>"
                 . $iconPath
                 . "</td>
@@ -160,7 +160,7 @@ class BetterForumPlugin extends ExtendPlugin
     public function getAction(string $name): ?PluginAction
     {
         if ($name === 'config') {
-            return new Configuration($this);
+            return new ConfigAction($this);
         }
         return parent::getAction($name);
     }
