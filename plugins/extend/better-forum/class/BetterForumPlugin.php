@@ -52,7 +52,7 @@ class BetterForumPlugin extends ExtendPlugin
      */
     public function onPluginPageScript(array $args): void
     {
-        $args['script'] = __DIR__ . DIRECTORY_SEPARATOR . '../public/script/page-forum-group.php';
+        $args['script'] = __DIR__ . DIRECTORY_SEPARATOR . '../script/page-forum-group.php';
     }
 
     /**
