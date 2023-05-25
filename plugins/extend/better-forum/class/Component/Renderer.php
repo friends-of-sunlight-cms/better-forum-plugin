@@ -136,7 +136,7 @@ class Renderer
             $icon->alt = 'custom icon';
         } else {
             $icon->name = ($countAnswers > 0 ? 'normal' : 'new');
-            $icon->path = Template::image('icons/topic-' . $icon->name . '.png');
+            $icon->path = Template::asset('images/icons/topic-' . $icon->name . '.png');
             $icon->alt = _lang('posts.topic.' . $icon->name);
         }
 
