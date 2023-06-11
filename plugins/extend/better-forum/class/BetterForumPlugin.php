@@ -85,7 +85,7 @@ class BetterForumPlugin extends ExtendPlugin
 
         // forum
         if ($_admin->currentModule === 'content-editforum') {
-            $GLOBALS['editscript_setting_extra'] = $this->renderIconPanel();
+            $GLOBALS['editscript_setting_extra'] .= $this->renderIconPanel();
         }
     }
 

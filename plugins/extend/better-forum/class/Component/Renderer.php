@@ -7,6 +7,7 @@ use Sunlight\GenericTemplates;
 use Sunlight\Post\PostService;
 use Sunlight\Router;
 use Sunlight\Template;
+use Sunlight\Util\ConfigurationFile;
 use Sunlight\Util\StringManipulator;
 use SunlightExtend\BetterForum\BetterForumPlugin;
 
