@@ -157,7 +157,7 @@ class ForumReader
     }
 
     /**
-     * Returns latest post for topics
+     * Returns lastest post for topics
      *
      * @param array $ids
      * @return array
