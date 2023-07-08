@@ -2,7 +2,7 @@
     "$schema": "../../../system/schema/extend.json",
     "name": "Better Forum",
     "description": "New page types for forums",
-    "version": "0.9.1",
+    "version": "0.9.2",
     "environment": {
         "system": "^8.0"
     },
@@ -10,6 +10,17 @@
         {"name": "Friends of Sunlight CMS", "url": "https://github.com/friends-of-sunlight-cms/"}
     ],
     "class": "BetterForumPlugin",
+    "config_defaults": {
+        "show_icon_panel": true,
+        "show_topics": true,
+        "show_answers": true,
+        "show_latest": true,
+        "show_latest_answers": true,
+        "pos_latest_answers": 1
+    },
+    "actions": {
+        "config": "ConfigAction"
+    },
     "langs": {
         "betterforum": "lang"
     },

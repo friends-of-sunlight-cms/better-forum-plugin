@@ -138,31 +138,5 @@ class BetterForumPlugin extends ExtendPlugin
     {
         return self::ICON_DIR_PATH . sprintf(self::ICON_FILE, $forumId);
     }
-
-    /**
-     * ============================================================================
-     *  EXTEND CONFIGURATION
-     * ============================================================================
-     */
-
-    protected function getConfigDefaults(): array
-    {
-        return [
-            'show_icon_panel' => true,
-            'show_topics' => true,
-            'show_answers' => true,
-            'show_latest' => true,
-            'show_latest_answers' => true,
-            'pos_latest_answers' => 1, // 0 = at the top; 1 = at the bottom
-        ];
-    }
-
-    public function getAction(string $name): ?PluginAction
-    {
-        if ($name === 'config') {
-            return new ConfigAction($this);
-        }
-        return parent::getAction($name);
-    }
 }
 
