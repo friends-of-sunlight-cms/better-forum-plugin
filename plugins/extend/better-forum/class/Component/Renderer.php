@@ -17,9 +17,9 @@ class Renderer
     private $hl = false;
     /** @var array */
     private $groups = [];
-    /** @var ConfigurationFile  */
+    /** @var ConfigurationFile */
     private $config;
-    /** @var array  */
+    /** @var array */
     private $userQuery;
 
     /**
@@ -57,7 +57,7 @@ class Renderer
         $output = "\n<div class='post-answer-list'>\n<h3>" . _lang('posts.forum.lastact') . "</h3>\n";
         if (count($answers) > 0) {
             $output .= "<table class='topic-latest'>\n";
-            foreach ($answers as $answer){
+            foreach ($answers as $answer) {
                 if ($answer['author'] != -1) {
                     $author = Router::userFromQuery($this->userQuery, $answer);
                 } else {

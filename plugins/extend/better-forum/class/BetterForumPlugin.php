@@ -2,9 +2,7 @@
 
 namespace SunlightExtend\BetterForum;
 
-use Sunlight\Core;
 use Sunlight\Extend;
-use Sunlight\Plugin\Action\PluginAction;
 use Sunlight\Plugin\ExtendPlugin;
 use Sunlight\Router;
 use Sunlight\User;
@@ -36,7 +34,7 @@ class BetterForumPlugin extends ExtendPlugin
      */
     function onAdminHead(array $args): void
     {
-        $args['css'][] = $this->getWebPath() . '/public/bf-admin.css';
+        $args['css'][] = $this->getAssetPath('public/bf-admin.css');
     }
 
     /**
