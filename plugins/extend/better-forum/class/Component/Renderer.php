@@ -8,7 +8,7 @@ use Sunlight\Post\PostService;
 use Sunlight\Router;
 use Sunlight\Template;
 use Sunlight\Util\ConfigurationFile;
-use Sunlight\Util\StringManipulator;
+use Sunlight\Util\StringHelper;
 use SunlightExtend\BetterForum\BetterForumPlugin;
 
 class Renderer
@@ -158,7 +158,7 @@ class Renderer
             <td class='topic-main-cell'>
                 <a href='" . _e(Router::page($rowData['id'], $rowData['slug'])) . "'> " . $rowData['title'] . "</a><br>
                 <small> "
-            . ($rowData['perex'] !== '' ? StringManipulator::ellipsis($rowData['perex'], 64) : '') .
+            . ($rowData['perex'] !== '' ? StringHelper::ellipsis($rowData['perex'], 64) : '') .
             "</small>
             </td>"
             . ($this->config->offsetGet('show_topics') ? "<td>" . $countTopics . "</td>" : "")
@@ -172,13 +172,13 @@ class Renderer
         if ($data['author'] != -1) {
             $lastAuthor = Router::userFromQuery($this->userQuery, $data, ['class' => 'post-author', 'max_len' => 16]);
         } else {
-            $lastAuthor = "<span class='post-author-guest'> " . StringManipulator::ellipsis(PostService::renderGuestName($data['guest']), 16) . "</span> ";
+            $lastAuthor = "<span class='post-author-guest'> " . StringHelper::ellipsis(PostService::renderGuestName($data['guest']), 16) . "</span> ";
         }
 
         $topicTitle = $data['topic_title'] ?? $data['subject'];
         $topicId = ($data['xhome'] != -1 ? $data['xhome'] : $data['id']);
         return '<span class="answer-latest">
-                <a href="' . _e(Router::topic($topicId, $data['topic_slug'])) . '" title="' . $topicTitle . '">' . StringManipulator::ellipsis($topicTitle, 24) . '</a><br>
+                <a href="' . _e(Router::topic($topicId, $data['topic_slug'])) . '" title="' . $topicTitle . '">' . StringHelper::ellipsis($topicTitle, 24) . '</a><br>
                 <small class="post-info"><em>' . $lastAuthor . '</em> (' . GenericTemplates::renderTime($data['topic_bumptime'] ?? $data['time'], 'post') . ')</small>
                 </span>';
     }
