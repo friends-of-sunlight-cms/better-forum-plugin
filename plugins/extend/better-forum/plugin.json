@@ -26,17 +26,14 @@
     "langs": {
         "betterforum": "lang"
     },
-    "events": [],
-    "events.web": [
+    "events": [
         {"event": "page.plugin.reg", "script": "event/pluginpage/ppage_register_idt.php"},
         {"event": "page.plugin.bf-group", "script": "event/pluginpage/ppage_register_script.php"},
         {"event": "page.plugin.bf-group.delete.do", "script": "event/pluginpage/ppage_delete_do.php"}
     ],
+    "events.web": [],
     "events.admin": [
         {"event": "admin.head", "script": "event/admin/head_assets.php"},
-        {"event":  "admin.page.editscript", "script": "event/admin/admin_page_editscript.php"}
-    ],
-    "extra": {
-        "group_idt": "bf-group"
-    }
+        {"event": "admin.page.editscript", "script": "event/admin/admin_page_editscript.php"}
+    ]
 }

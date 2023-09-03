@@ -8,7 +8,7 @@ return function (array $args) {
     // pluginpage
     if (
         $_admin->currentModule === 'content-editpluginpage'
-        && $GLOBALS['type_idt'] == $this->getOptions()['extra']['group_idt']
+        && $GLOBALS['type_idt'] == 'bf-group'
     ) {
         // disabling editing elements
         $GLOBALS['editscript_enable_meta'] = false;

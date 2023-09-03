@@ -28,9 +28,6 @@ class ForumReader
     /** @var array */
     private $userQuery;
 
-    /** @var string */
-    private $typeIdt;
-
     /**
      * @param int $parentId
      * @param array $userQuery
@@ -41,11 +38,6 @@ class ForumReader
         $this->maxDepth = 2;
 
         $this->userQuery = $userQuery;
-
-        $this->typeIdt = Core::$pluginManager
-            ->getPlugins()
-            ->getExtend('better-forum')
-            ->getOptions()['extra']['group_idt'];
     }
 
     /**
@@ -116,7 +108,7 @@ class ForumReader
                 $ids[] = $page['id'];
             } elseif (
                 $page['type'] == Page::PLUGIN
-                && $page['type_idt'] == $this->typeIdt
+                && $page['type_idt'] == 'bf-group'
             ) {
                 // if type is bf-group then set only group_name
                 $groups[$page['id']] = ['group_name' => $page['title'], 'rows' => []];
@@ -131,7 +123,7 @@ class ForumReader
         }
 
         // event
-        Extend::call('page.' . $this->typeIdt . '.groups', [
+        Extend::call('page.bf-group.groups', [
             'groups' => &$groups
         ]);
 

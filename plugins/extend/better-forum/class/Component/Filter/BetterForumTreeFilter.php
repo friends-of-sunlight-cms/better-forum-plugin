@@ -17,9 +17,6 @@ class BetterForumTreeFilter implements TreeFilterInterface
     /** @var string */
     private $sql;
 
-    /** @var string */
-    private $typeIdt;
-
     /**
      * Supported keys in $options:
      * ------------------------------------------------------------
@@ -38,8 +35,6 @@ class BetterForumTreeFilter implements TreeFilterInterface
 
         $this->options = $options;
         $this->sql = $this->compileSql($options);
-
-        $this->typeIdt = Core::$pluginManager->getPlugins()->getExtend('better-forum')->getOptions()['extra']['group_idt'];
     }
 
     /**
@@ -53,7 +48,7 @@ class BetterForumTreeFilter implements TreeFilterInterface
             /* visibility */ $node['visible']
             /* page level */ && (!$this->options['check_level'] || $node['level'] <= User::getLevel())
             /* page public */ && (!$this->options['check_public'] || User::isLoggedIn() || $node['public'])
-            /* type check */ && ($node['type'] == Page::FORUM || $node['type_idt'] == $this->typeIdt);
+            /* type check */ && ($node['type'] == Page::FORUM || $node['type_idt'] == 'bf-group');
     }
 
     /**
@@ -83,7 +78,7 @@ class BetterForumTreeFilter implements TreeFilterInterface
     private function compileSql(array $options): string
     {
         // base conditions
-        $sql = '%__node__%.visible=1 AND (%__node__%.type=' . Page::FORUM . ' OR %__node__%.type_idt=' . DB::val($this->typeIdt) . ')';
+        $sql = '%__node__%.visible=1 AND (%__node__%.type=' . Page::FORUM . ' OR %__node__%.type_idt=' . DB::val('bf-group') . ')';
 
         if ($options['check_level']) {
             $sql .= ' AND %__node__%.level<=' . User::getLevel();

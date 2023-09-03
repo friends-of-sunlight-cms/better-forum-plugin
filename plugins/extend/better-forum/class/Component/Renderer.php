@@ -23,20 +23,12 @@ class Renderer
     /** @var array */
     private $userQuery;
 
-    /** @var string */
-    private $typeIdt;
-
     public function __construct(ExtendPlugin $betterForumPlugin, array $groups, array $userQuery)
     {
         // plugin config
         $this->config = $betterForumPlugin->getConfig();
         $this->groups = $groups;
         $this->userQuery = $userQuery;
-
-        $this->typeIdt = Core::$pluginManager
-            ->getPlugins()
-            ->getExtend('better-forum')
-            ->getOptions()['extra']['group_idt'];
     }
 
     /**
@@ -146,7 +138,7 @@ class Renderer
         }
 
         // event
-        Extend::call('page.' . $this->typeIdt . '.item', [
+        Extend::call('page.bf-group.item', [
             'item' => &$rowData,
             'icon' => &$icon,
             'count_topics' => $countTopics,
