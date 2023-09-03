@@ -2,6 +2,7 @@
 
 namespace SunlightExtend\BetterForum\Component\Filter;
 
+use Sunlight\Core;
 use Sunlight\Database\Database as DB;
 use Sunlight\Database\TreeFilterInterface;
 use Sunlight\Database\TreeReader;
@@ -15,6 +16,9 @@ class BetterForumTreeFilter implements TreeFilterInterface
     private $options;
     /** @var string */
     private $sql;
+
+    /** @var string */
+    private $typeIdt;
 
     /**
      * Supported keys in $options:
@@ -34,6 +38,8 @@ class BetterForumTreeFilter implements TreeFilterInterface
 
         $this->options = $options;
         $this->sql = $this->compileSql($options);
+
+        $this->typeIdt = Core::$pluginManager->getPlugins()->getExtend('better-forum')->getOptions()['extra']['group_idt'];
     }
 
     /**
@@ -47,7 +53,7 @@ class BetterForumTreeFilter implements TreeFilterInterface
             /* visibility */ $node['visible']
             /* page level */ && (!$this->options['check_level'] || $node['level'] <= User::getLevel())
             /* page public */ && (!$this->options['check_public'] || User::isLoggedIn() || $node['public'])
-            /* type check */ && ($node['type'] == Page::FORUM || $node['type_idt'] == BetterForumPlugin::GROUP_IDT);
+            /* type check */ && ($node['type'] == Page::FORUM || $node['type_idt'] == $this->typeIdt);
     }
 
     /**
@@ -77,7 +83,7 @@ class BetterForumTreeFilter implements TreeFilterInterface
     private function compileSql(array $options): string
     {
         // base conditions
-        $sql = '%__node__%.visible=1 AND (%__node__%.type=' . Page::FORUM . ' OR %__node__%.type_idt=' . DB::val(BetterForumPlugin::GROUP_IDT) . ')';
+        $sql = '%__node__%.visible=1 AND (%__node__%.type=' . Page::FORUM . ' OR %__node__%.type_idt=' . DB::val($this->typeIdt) . ')';
 
         if ($options['check_level']) {
             $sql .= ' AND %__node__%.level<=' . User::getLevel();

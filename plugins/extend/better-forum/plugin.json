@@ -2,17 +2,16 @@
     "$schema": "../../../system/schema/extend.json",
     "name": "Better Forum",
     "description": "New page types for forums",
-    "version": "0.9.2",
+    "authors": [
+        {"name": "Friends of Sunlight CMS", "url": "https://github.com/friends-of-sunlight-cms/"}
+    ],
+    "version": "1.0.0",
     "environment": {
         "system": "^8.0"
     },
     "dependencies": {
-        "fosc-lib": ">=0.9.2"
+        "fosc-lib": ">=1.0.0"
     },
-    "authors": [
-        {"name": "Friends of Sunlight CMS", "url": "https://github.com/friends-of-sunlight-cms/"}
-    ],
-    "class": "BetterForumPlugin",
     "config_defaults": {
         "show_icon_panel": true,
         "show_topics": true,
@@ -28,6 +27,16 @@
         "betterforum": "lang"
     },
     "events": [],
-    "events.web": [],
-    "events.admin": []
+    "events.web": [
+        {"event": "page.plugin.reg", "script": "event/pluginpage/ppage_register_idt.php"},
+        {"event": "page.plugin.bf-group", "script": "event/pluginpage/ppage_register_script.php"},
+        {"event": "page.plugin.bf-group.delete.do", "script": "event/pluginpage/ppage_delete_do.php"}
+    ],
+    "events.admin": [
+        {"event": "admin.head", "script": "event/admin/head_assets.php"},
+        {"event":  "admin.page.editscript", "script": "event/admin/admin_page_editscript.php"}
+    ],
+    "extra": {
+        "group_idt": "bf-group"
+    }
 }

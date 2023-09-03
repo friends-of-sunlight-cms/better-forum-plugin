@@ -2,14 +2,15 @@
 
 namespace SunlightExtend\BetterForum\Component;
 
+use Sunlight\Core;
 use Sunlight\Extend;
 use Sunlight\GenericTemplates;
+use Sunlight\Plugin\ExtendPlugin;
 use Sunlight\Post\PostService;
 use Sunlight\Router;
 use Sunlight\Template;
 use Sunlight\Util\ConfigurationFile;
 use Sunlight\Util\StringHelper;
-use SunlightExtend\BetterForum\BetterForumPlugin;
 
 class Renderer
 {
@@ -22,16 +23,20 @@ class Renderer
     /** @var array */
     private $userQuery;
 
-    /**
-     * @param BetterForumPlugin $betterForumPlugin
-     * @param array $userQuery
-     */
-    public function __construct(BetterForumPlugin $betterForumPlugin, array $groups, array $userQuery)
+    /** @var string */
+    private $typeIdt;
+
+    public function __construct(ExtendPlugin $betterForumPlugin, array $groups, array $userQuery)
     {
         // plugin config
         $this->config = $betterForumPlugin->getConfig();
         $this->groups = $groups;
         $this->userQuery = $userQuery;
+
+        $this->typeIdt = Core::$pluginManager
+            ->getPlugins()
+            ->getExtend('better-forum')
+            ->getOptions()['extra']['group_idt'];
     }
 
     /**
@@ -111,7 +116,6 @@ class Renderer
     }
 
     /**
-     * @param ForumIcon $icon
      * @param array $rowData
      * @return string
      */
@@ -130,7 +134,7 @@ class Renderer
         // icon
         $icon = new ForumIcon();
 
-        $customIconFile = BetterForumPlugin::composeIconPath($rowData['id']);
+        $customIconFile = IconPanelRenderer::composeIconPath($rowData['id']);
         if (is_file($customIconFile)) {
             $icon->name = 'custom';
             $icon->path = Router::file($customIconFile);
@@ -142,7 +146,7 @@ class Renderer
         }
 
         // event
-        Extend::call('page.' . BetterForumPlugin::GROUP_IDT . '.item', [
+        Extend::call('page.' . $this->typeIdt . '.item', [
             'item' => &$rowData,
             'icon' => &$icon,
             'count_topics' => $countTopics,

@@ -1,5 +1,6 @@
 <?php
 
+use Sunlight\Core;
 use Sunlight\Extend;
 use Sunlight\Hcm;
 use Sunlight\User;
@@ -7,10 +8,10 @@ use SunlightExtend\BetterForum\BetterForumPlugin;
 use SunlightExtend\BetterForum\Component\ForumReader;
 use SunlightExtend\BetterForum\Component\Renderer;
 
-
 defined('SL_ROOT') or exit;
 
-$idt_type = BetterForumPlugin::GROUP_IDT;
+$pluginInstance = Core::$pluginManager->getPlugins()->getExtend('better-forum');
+$idt_type = $pluginInstance->getOptions()['extra']['group_idt'];
 
 // titulek
 $_index->title = $_page['title'];
@@ -24,8 +25,7 @@ Extend::call('page.' . $idt_type . '.content.after', $extend_args);
 
 $userQuery = User::createQuery('p.author');
 
-/** @var $bfp BetterForumPlugin */
-$bfp = BetterForumPlugin::getInstance();
+$bfp = Core::$pluginManager->getPlugins()->getExtend('better-forum');
 
 $forumReader = new ForumReader($id, $userQuery);
 $renderer = new Renderer(
@@ -34,15 +34,15 @@ $renderer = new Renderer(
     $userQuery
 );
 
-// prepare latest anwers
+// prepare latest answers
 $latestAnswers = '';
-if ($bfp->getConfig()->offsetGet('show_latest_answers')) {
+if ($bfp->getConfig()['show_latest_answers']) {
     $answers = $forumReader->lastestAnswers($forumReader->getIds());
     $latestAnswers = $renderer->renderLatestAnswers($answers);
 }
 
 // last answer on top
-if ($bfp->getConfig()->offsetGet('pos_latest_answers') == 0) {
+if ($bfp->getConfig()['pos_latest_answers'] == 0) {
     $output .= $latestAnswers;
 }
 
@@ -50,6 +50,6 @@ if ($bfp->getConfig()->offsetGet('pos_latest_answers') == 0) {
 $output .= $renderer->render();
 
 // last answer on bottom
-if ($bfp->getConfig()->offsetGet('pos_latest_answers') == 1) {
+if ($bfp->getConfig()['pos_latest_answers'] == 1) {
     $output .= $latestAnswers;
 }

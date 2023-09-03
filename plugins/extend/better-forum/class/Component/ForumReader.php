@@ -2,12 +2,12 @@
 
 namespace SunlightExtend\BetterForum\Component;
 
+use Sunlight\Core;
 use Sunlight\Database\Database as DB;
 use Sunlight\Extend;
 use Sunlight\Page\Page;
 use Sunlight\Post\Post;
 use Sunlight\Settings;
-use SunlightExtend\BetterForum\BetterForumPlugin;
 use SunlightExtend\BetterForum\Component\Filter\BetterForumTreeFilter;
 
 class ForumReader
@@ -28,6 +28,9 @@ class ForumReader
     /** @var array */
     private $userQuery;
 
+    /** @var string */
+    private $typeIdt;
+
     /**
      * @param int $parentId
      * @param array $userQuery
@@ -38,6 +41,11 @@ class ForumReader
         $this->maxDepth = 2;
 
         $this->userQuery = $userQuery;
+
+        $this->typeIdt = Core::$pluginManager
+            ->getPlugins()
+            ->getExtend('better-forum')
+            ->getOptions()['extra']['group_idt'];
     }
 
     /**
@@ -108,7 +116,7 @@ class ForumReader
                 $ids[] = $page['id'];
             } elseif (
                 $page['type'] == Page::PLUGIN
-                && $page['type_idt'] == BetterForumPlugin::GROUP_IDT
+                && $page['type_idt'] == $this->typeIdt
             ) {
                 // if type is bf-group then set only group_name
                 $groups[$page['id']] = ['group_name' => $page['title'], 'rows' => []];
@@ -123,7 +131,7 @@ class ForumReader
         }
 
         // event
-        Extend::call('page.' . BetterForumPlugin::GROUP_IDT . '.groups', [
+        Extend::call('page.' . $this->typeIdt . '.groups', [
             'groups' => &$groups
         ]);
 
