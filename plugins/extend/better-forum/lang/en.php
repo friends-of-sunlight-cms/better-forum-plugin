@@ -13,6 +13,8 @@ return [
     'config.pos_latest_answers' => 'Position of the list of latest answers',
     'config.on_top' => 'At the top',
     'config.on_bottom' => 'At the bottom',
+    'disable.error'=> 'This plugin is required by content pages that would cause the site to become unavailable if it were unavailable.</br></br>The following pages of type "<em>forum group</em>" prevent the plugin from being deactivated:',
+    'remove.error'=> 'This plugin is required by content pages that would cause the site to become unavailable if it were unavailable.</br></br>The following pages of type "<em>forum group</em>" prevent the plugin from being removed:',
     // table labels
     'list.category' => 'Category',
     'list.topics' => 'Topics',

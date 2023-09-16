@@ -9,9 +9,6 @@
     "environment": {
         "system": "^8.0"
     },
-    "dependencies": {
-        "fosc-lib": ">=1.0.0"
-    },
     "config_defaults": {
         "show_icon_panel": true,
         "show_topics": true,
@@ -21,7 +18,9 @@
         "pos_latest_answers": 1
     },
     "actions": {
-        "config": "ConfigAction"
+        "config": "ConfigAction",
+        "disable": "DisableAction",
+        "remove": "RemoveAction"
     },
     "langs": {
         "betterforum": "lang"
@@ -31,9 +30,8 @@
         {"event": "page.plugin.bf-group", "script": "event/pluginpage/ppage_register_script.php"},
         {"event": "page.plugin.bf-group.delete.do", "script": "event/pluginpage/ppage_delete_do.php"}
     ],
-    "events.web": [],
     "events.admin": [
-        {"event": "admin.head", "script": "event/admin/head_assets.php"},
+        {"event": "admin.head", "script": "event/admin/head_assets.php", "group": "betterforum"},
         {"event": "admin.page.editscript", "script": "event/admin/admin_page_editscript.php"}
     ]
 }

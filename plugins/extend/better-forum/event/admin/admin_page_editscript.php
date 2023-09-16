@@ -20,6 +20,9 @@ return function (array $args) {
 
     // forum
     if ($_admin->currentModule === 'content-editforum') {
+
+        $this->enableEventGroup('betterforum');
+
         $iconPanelRenderer = new IconPanelRenderer($this, (int)Request::get('id'));
         $GLOBALS['editscript_setting_extra'] .= $iconPanelRenderer->render();
     }

@@ -4,7 +4,6 @@ use Sunlight\Core;
 use Sunlight\Extend;
 use Sunlight\Hcm;
 use Sunlight\User;
-use SunlightExtend\BetterForum\BetterForumPlugin;
 use SunlightExtend\BetterForum\Component\ForumReader;
 use SunlightExtend\BetterForum\Component\Renderer;
 
@@ -22,24 +21,24 @@ Extend::call('page.bf-group.content.after', $extend_args);
 
 $userQuery = User::createQuery('p.author');
 
-$bfp = Core::$pluginManager->getPlugins()->getExtend('better-forum');
+$pluginInstance = Core::$pluginManager->getPlugins()->getExtend('better-forum');
 
 $forumReader = new ForumReader($id, $userQuery);
 $renderer = new Renderer(
-    $bfp,
+    $pluginInstance,
     $forumReader->getGroups(),
     $userQuery
 );
 
 // prepare latest answers
 $latestAnswers = '';
-if ($bfp->getConfig()['show_latest_answers']) {
+if ($pluginInstance->getConfig()['show_latest_answers']) {
     $answers = $forumReader->lastestAnswers($forumReader->getIds());
     $latestAnswers = $renderer->renderLatestAnswers($answers);
 }
 
 // last answer on top
-if ($bfp->getConfig()['pos_latest_answers'] == 0) {
+if ($pluginInstance->getConfig()['pos_latest_answers'] == 0) {
     $output .= $latestAnswers;
 }
 
@@ -47,6 +46,6 @@ if ($bfp->getConfig()['pos_latest_answers'] == 0) {
 $output .= $renderer->render();
 
 // last answer on bottom
-if ($bfp->getConfig()['pos_latest_answers'] == 1) {
+if ($pluginInstance->getConfig()['pos_latest_answers'] == 1) {
     $output .= $latestAnswers;
 }

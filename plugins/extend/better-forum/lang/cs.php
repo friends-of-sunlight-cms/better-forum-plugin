@@ -13,6 +13,8 @@ return [
     'config.pos_latest_answers' => 'Pozice výpisu posledních odpovědí',
     'config.on_top' => 'Nahoře',
     'config.on_bottom' => 'Dole',
+    'disable.error'=> 'Tento plugin je vyžadován stránkami s obsahem, které by v případě jeho nedostupnosti způsobily nefunkčnost webu.</br></br>Následující stránky typu "<em>fórum skupina</em>" brání deaktivaci pluginu:',
+    'remove.error'=> 'Tento plugin je vyžadován stránkami s obsahem, které by v případě jeho nedostupnosti způsobily nefunkčnost webu.</br></br>Následující stránky typu "<em>fórum skupina</em>" brání odebrání pluginu:',
     // table labels
     'list.category' => 'Kategorie',
     'list.topics' => 'Témata',
