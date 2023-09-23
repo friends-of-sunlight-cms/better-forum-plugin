@@ -87,9 +87,9 @@ class Renderer
         $this->hl = false;
 
         // render table
-        $output = "\n<table class='topic-table'>\n<thead>
+        $output = "\n<table class=\"better-forum topic-table\">\n<thead>
         <tr>
-            <th colspan='2'>" . ($groupName !== '' ? _e($groupName) : _lang('betterforum.list.category')) . "</th>";
+            <th colspan=\"2\">" . ($groupName !== '' ? _e($groupName) : _lang('betterforum.list.category')) . "</th>";
         $output .= ($this->config->offsetGet('show_topics') ? "<th>" . _lang('betterforum.list.topics') . "</th>" : "");
         $output .= ($this->config->offsetGet('show_answers') ? "<th>" . _lang('betterforum.list.answers') . "</th>" : "");
         $output .= ($this->config->offsetGet('show_latest') ? "<th>" . _lang('global.lastanswer') . "</th>" : "");
@@ -102,7 +102,7 @@ class Renderer
             // change highlight
             $this->hl = !$this->hl;
         }
-        $output .= "</tbody>\n</table> ";
+        $output .= "</tbody>\n</table>";
 
         return $output;
     }
@@ -157,8 +157,8 @@ class Renderer
             . ($rowData['perex'] !== '' ? StringHelper::ellipsis($rowData['perex'], 64) : '') .
             "</small>
             </td>"
-            . ($this->config->offsetGet('show_topics') ? "<td>" . $countTopics . "</td>" : "")
-            . ($this->config->offsetGet('show_answers') ? "<td>" . $countAnswers . "</td>" : "")
+            . ($this->config->offsetGet('show_topics') ? "<td>" . _num($countTopics) . "</td>" : "")
+            . ($this->config->offsetGet('show_answers') ? "<td>" . _num($countAnswers) . "</td>" : "")
             . ($this->config->offsetGet('show_latest') ? "<td>" . $latestPost . "</td>" : "")
             . "</tr> \n";
     }
