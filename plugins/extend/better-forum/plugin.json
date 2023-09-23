@@ -30,6 +30,9 @@
         {"event": "page.plugin.bf-group", "script": "event/pluginpage/ppage_register_script.php"},
         {"event": "page.plugin.bf-group.delete.do", "script": "event/pluginpage/ppage_delete_do.php"}
     ],
+    "events.web": [
+        {"event": "tpl.head", "script": "event/head_assets.php", "group": "betterforum"}
+    ],
     "events.admin": [
         {"event": "admin.head", "script": "event/admin/head_assets.php", "group": "betterforum"},
         {"event": "admin.page.editscript", "script": "event/admin/admin_page_editscript.php"}
