@@ -16,37 +16,35 @@ class ConfigAction extends BaseConfigAction
         return [
             'show_icon_panel' => [
                 'label' => _lang('betterforum.config.show_icon_panel'),
-                'input' => '<input type="checkbox" name="config[show_icon_panel]" value="1"' . Form::activateCheckbox($config['show_icon_panel']) . '>',
+                'input' => '<input type="checkbox" name="config[show_icon_panel]" value="1"' . Form::loadCheckbox('config', $config['show_icon_panel'], 'show_icon_panel') . '>',
                 'type' => 'checkbox'
             ],
             'show_topics' => [
                 'label' => _lang('betterforum.config.show_topics'),
-                'input' => '<input type="checkbox" name="config[show_topics]" value="1"' . Form::activateCheckbox($config['show_topics']) . '>',
+                'input' => '<input type="checkbox" name="config[show_topics]" value="1"' . Form::loadCheckbox('config', $config['show_topics'], 'show_topics') . '>',
                 'type' => 'checkbox'
             ],
             'show_answers' => [
                 'label' => _lang('betterforum.config.show_answers'),
-                'input' => '<input type="checkbox" name="config[show_answers]" value="1"' . Form::activateCheckbox($config['show_answers']) . '>',
+                'input' => '<input type="checkbox" name="config[show_answers]" value="1"' . Form::loadCheckbox('config', $config['show_answers'], 'show_answers') . '>',
                 'type' => 'checkbox'
             ],
             'show_latest' => [
                 'label' => _lang('betterforum.config.show_latest'),
-                'input' => '<input type="checkbox" name="config[show_latest]" value="1"' . Form::activateCheckbox($config['show_latest']) . '>',
+                'input' => '<input type="checkbox" name="config[show_latest]" value="1"' . Form::loadCheckbox('config', $config['show_latest'], 'show_latest') . '>',
                 'type' => 'checkbox'
             ],
             'show_latest_answers' => [
                 'label' => _lang('betterforum.config.show_latest_answers'),
-                'input' => '<input type="checkbox" name="config[show_latest_answers]" value="1"' . Form::activateCheckbox($config['show_latest_answers']) . '>',
+                'input' => '<input type="checkbox" name="config[show_latest_answers]" value="1"' . Form::loadCheckbox('config', $config['show_latest_answers'], 'show_latest_answers') . '>',
                 'type' => 'checkbox'
             ],
             'pos_latest_answers' => [
                 'label' => _lang('betterforum.config.pos_latest_answers'),
-                'input' => _buffer(function () use ($config) { ?>
-                    <select name="config[pos_latest_answers]" class="inputsmall">
-                        <option value="0" <?= Form::selectOption($config['pos_latest_answers'] === 0) ?>><?= _lang('betterforum.config.on_top') ?></option>
-                        <option value="1" <?= Form::selectOption($config['pos_latest_answers'] === 1) ?>><?= _lang('betterforum.config.on_bottom') ?></option>
-                    </select>
-                <?php }),
+                'input' => Form::select('config[pos_latest_answers]', [
+                    0 => _lang('betterforum.config.on_top'),
+                    1 => _lang('betterforum.config.on_bottom'),
+                ], $config['pos_latest_answers'], ['class' => 'inputsmall']),
             ],
         ];
     }
